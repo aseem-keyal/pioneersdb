@@ -1,0 +1,71 @@
+<head>
+  <title>pioneersdb</title>
+</head>
+
+<body>
+    <div class="container">
+        {{#if currentUser}}
+            {{> dashboard}}
+        {{else}}
+            {{> adminRegister}}
+            {{> adminLogin}}
+        {{/if}}
+    </div>
+</body>
+
+<template name="dashboard">
+    <div class="col-md-4">
+        <h3>You're logged in.</h3>
+        {{#with currentUser.profile}}
+            {{#if approved}}
+            <table class="table table-striped">
+                {{#each user}}
+                <tr>
+                    <td>{{userEmail}}</td>
+                    <td>{{profile.approved}}</td>
+                    <td>{{_id}}</td>
+                </tr>
+                {{/each}}
+            </table>
+                <p>You're registered!</p>
+            {{else}}
+                <p>You're not registered :(</p>
+            {{/if}}
+        {{/with}}
+        <p><a href="#" class="logout">Logout</a></p>
+    </div>
+</template>
+
+<template name="adminRegister">
+    <div class="col-md-4">
+        <h3>Admin Register</h3>
+        <form>
+            <div class="form-group">
+                <label for="registerEmail">Email address</label>
+                <input type="email" class="form-control" name="registerEmail">
+            </div>
+            <div class="form-group">
+                <label for="registerPasswod">Password</label>
+                <input type="password" class="form-control" name="registerPassword">
+            </div>
+            <button type="submit" class="btn btn-primary">Register</button>
+        </form>
+    </div>
+</template>
+
+<template name="adminLogin">
+    <div class="col-md-4">
+        <h3>Admin Login</h3>
+        <form>
+            <div class="form-group">
+                <label for="loginEmail">Email address</label>
+                <input type="email" class="form-control" name="loginEmail">
+            </div>
+            <div class="form-group">
+                <label for="loginPasswod">Password</label>
+                <input type="password" class="form-control" name="loginPassword">
+            </div>
+            <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+    </div>
+</template>
