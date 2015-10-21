@@ -14,20 +14,24 @@
 </body>
 
 <template name="dashboard">
-    <div class="col-md-4">
+    <div class="col-md-8">
         <h3>You're logged in.</h3>
         {{#with currentUser.profile}}
             {{#if approved}}
-            <table class="table table-striped">
-                {{#each user}}
-                <tr>
-                    <td>{{userEmail}}</td>
-                    <td>{{profile.approved}}</td>
-                    <td>{{_id}}</td>
-                </tr>
-                {{/each}}
-            </table>
                 <p>You're registered!</p>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Email</th>
+                            <th>Approve admin</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {{#each user}}
+                        {{> potentialAdmin}}
+                    {{/each}}
+                    </tbody>
+                </table>
             {{else}}
                 <p>You're not registered :(</p>
             {{/if}}
@@ -68,4 +72,14 @@
             <button type="submit" class="btn btn-primary">Login</button>
         </form>
     </div>
+</template>
+<template name="potentialAdmin">
+    <tr>
+        <td>{{userEmail}}</td>
+        {{#if profile.approved}}
+            <td><button type="button" class="btn btn-default" disabled="disabled">Approved</button></td>
+        {{else}}
+            <td><a href="#" class="btn btn-primary approve">Approve</a></td>
+        {{/if}}
+    </tr>
 </template>
