@@ -26,19 +26,20 @@ if (Meteor.isClient) {
             Meteor.loginWithPassword(email, password);
         }
     });
-    Template.dashboard.events({
+    Template.navbar.events({
         'click .logout': function(event) {
             event.preventDefault();
             Meteor.logout();
         }
     });
+    Template.navbar.helpers({
+        "currentEmail": function() { return Meteor.user().emails[0].address; }
+    });
     Template.dashboard.helpers({
-        "user": function() {  return Meteor.users.find(); }
+        "user": function() {  return Meteor.users.find({'profile.admin': 1}, {}); }
     });
     Template.potentialAdmin.helpers({
-        "userEmail": function() {
-            return this.emails[0].address;
-        }
+        "userEmail": function() { return this.emails[0].address; }
     });
     Template.potentialAdmin.events({
         'click .approve': function (event) {
