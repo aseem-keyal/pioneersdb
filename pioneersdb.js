@@ -1,3 +1,32 @@
+Router.configure({
+    layoutTemplate: 'main'
+});
+Router.route('/', {
+    name: 'home',
+    template: 'home'
+});
+Router.route('/profile', {
+    name: 'profile',
+    template: 'dashboard',
+    onBeforeAction: function () {
+        if (!Meteor.user()) {
+            if (Meteor.loggingIn()) {
+                this.next();
+            }
+            else {
+                Router.go('login');
+            }
+        }
+    }
+});
+Router.route('/login', {
+    name: 'login',
+    template: 'studentLogin'
+});
+Router.route('/adminLogin', {
+    name: 'adminLogin',
+    template: 'adminLogin'
+});
 if (Meteor.isClient) {
     Meteor.subscribe("users");
     Template.adminRegister.events({
@@ -16,14 +45,34 @@ if (Meteor.isClient) {
                     admin: 1
                 }
             });
+            Router.go('profile');
         }
     });
-    Template.adminLogin.events({
+    Template.studentRegister.events({
+        'submit form': function(event) {
+            event.preventDefault();
+            var email = event.target.registerEmail.value;
+            var password = event.target.registerPassword.value;
+            var approved = 0;
+            var users = Meteor.users.find();
+            Accounts.createUser({
+                email: email,
+                password: password,
+                profile: {
+                    approved: 0,
+                    admin: 0
+                }
+            });
+            Router.go('profile');
+        }
+    });
+    Template.login.events({
         'submit form': function(event) {
             event.preventDefault();
             var email = event.target.loginEmail.value;
             var password = event.target.loginPassword.value;
             Meteor.loginWithPassword(email, password);
+            Router.go('profile');
         }
     });
     Template.navbar.events({
