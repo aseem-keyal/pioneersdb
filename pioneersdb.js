@@ -1,32 +1,37 @@
 Router.configure({
     layoutTemplate: 'main'
 });
+
 Router.route('/', {
     name: 'home',
     template: 'home'
 });
+
 Router.route('/profile', {
     name: 'profile',
     template: 'dashboard',
     onBeforeAction: function () {
         if (!Meteor.user()) {
             if (Meteor.loggingIn()) {
-                this.next();
             }
             else {
                 Router.go('login');
             }
         }
+        this.next();
     }
 });
+
 Router.route('/login', {
     name: 'login',
     template: 'studentLogin'
 });
+
 Router.route('/adminLogin', {
     name: 'adminLogin',
     template: 'adminLogin'
 });
+
 if (Meteor.isClient) {
     Meteor.subscribe("users");
     Template.adminRegister.events({
@@ -67,30 +72,43 @@ if (Meteor.isClient) {
         }
     });
     Template.login.events({
-        'submit form': function(event) {
+        'submit form': function(event, template) {
             event.preventDefault();
             var email = event.target.loginEmail.value;
             var password = event.target.loginPassword.value;
-            Meteor.loginWithPassword(email, password);
-            Router.go('profile');
+            Meteor.loginWithPassword(email, password, function(error) {
+                // 3. Handle the response
+                if (Meteor.user()) {
+                    Router.go('profile');
+                } else {
+                    //var message = "There was an error logging in: <strong>" + error.reason + "</strong>";
+                    //template.find('#form-messages').html(message);
+                }
+                return;
+            });
+
+            return false;
         }
     });
     Template.navbar.events({
         'click .logout': function(event) {
             event.preventDefault();
-            Meteor.logout();
+            Meteor.logout(function() {
+                Router.go('/login');
+            });
         }
     });
     Template.navbar.helpers({
         "currentEmail": function() { return Meteor.user().emails[0].address; }
     });
-    Template.dashboard.helpers({
-        "user": function() {  return Meteor.users.find({'profile.admin': 1}, {}); }
+    Template.adminProfile.helpers({
+        "potentialAdmins": function() {  return Meteor.users.find({'profile.admin': 1}, {}); },
+        "potentialStudents": function() {  return Meteor.users.find({'profile.admin': 0}, {}); }
     });
-    Template.potentialAdmin.helpers({
+    Template.potentialUser.helpers({
         "userEmail": function() { return this.emails[0].address; }
     });
-    Template.potentialAdmin.events({
+    Template.potentialUser.events({
         'click .approve': function (event) {
             event.preventDefault();
             Meteor.users.update({_id: this._id}, {$set: {'profile.approved': 1 }});

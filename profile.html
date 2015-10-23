@@ -1,0 +1,72 @@
+<template name="dashboard">
+    <div class="col-md-8">
+        {{#with currentUser.profile}}
+            {{#if approved}}
+                {{#if admin}}
+                    {{> adminProfile}}
+                {{else}}
+                    {{> studentProfile}}
+                {{/if}}
+            {{else}}
+                <p>You're not registered :( [Insert message about contacting coach in order to be approved]</p>
+            {{/if}}
+        {{/with}}
+    </div>
+</template>
+
+
+<template name="adminProfile">
+<h3>Admin Dashboard</h3>
+ <ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active"><a href="#approveAdmins" aria-controls="approveAdmins" role="tab" data-toggle="tab">Approve Admins</a></li>
+    <li role="presentation"><a href="#approveStudents" aria-controls="approveStudents" role="tab" data-toggle="tab">Approve Students</a></li>
+  </ul>
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane fade in active" id="approveAdmins">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Email</th>
+                        <th>Approve admin</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {{#each potentialAdmins}}
+                    {{> potentialUser}}
+                {{/each}}
+                </tbody>
+            </table>
+        </div>
+        <div role="tabpanel" class="tab-pane fade" id="approveStudents">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Email</th>
+                        <th>Approve student</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {{#each potentialStudents}}
+                    {{> potentialUser}}
+                {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</template>
+
+<template name="studentProfile">
+    <h3>Student Profile</h3>
+    <p>This is the student profile.</p>
+</template>
+
+<template name="potentialUser">
+    <tr>
+        <td>{{userEmail}}</td>
+        {{#if profile.approved}}
+            <td><button type="button" class="btn btn-default" disabled="disabled">Approved</button></td>
+        {{else}}
+            <td><a href="#" class="btn btn-primary approve">Approve</a></td>
+        {{/if}}
+    </tr>
+</template>
