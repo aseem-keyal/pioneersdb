@@ -1,3 +1,15 @@
+let Questions = new Meteor.Collection('questions'),
+  QuestionsIndex = new EasySearch.Index({
+    collection: Questions,
+    fields: ['answer_sanitized', 'question_sanitized'],
+    engine: new EasySearch.MongoDB()
+  });
+
+var InputAttributes = {
+    placeholder: "Search...",
+    class: "form-control"
+};
+
 Router.configure({
     layoutTemplate: 'main'
 });
@@ -113,6 +125,10 @@ if (Meteor.isClient) {
             event.preventDefault();
             Meteor.users.update({_id: this._id}, {$set: {'profile.approved': 1 }});
         }
+    });
+    Template.searchBox.helpers({
+        questionsIndex: () => QuestionsIndex,
+        attrs: () => InputAttributes
     });
 }
 
