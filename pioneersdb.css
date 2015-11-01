@@ -1,2 +1,6 @@
 /* CSS declarations go here */
 body { padding-top: 70px; }
+req {
+    font-weight: bold;
+    text-decoration: underline;
+}

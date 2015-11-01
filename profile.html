@@ -70,20 +70,21 @@
 </template>
 
 <template name="searchBox">
-    <div class="col-md-10 col-md-offset-1 well well-lg">
+    <div class="col-md-10 col-md-offset-1">
         {{> EasySearch.Input attributes=attrs timeout=250 index=questionsIndex }}
     </div>
     <br>
+    {{#EasySearch.Each index=questionsIndex }}
     <div class="row">
-        {{#EasySearch.Each index=questionsIndex }}
-        <div class="col-md-12 well well-sm">
+        <div class="col-md-12">
             <b>{{tournament}} | {{packet}} | {{number}}</b>
             <br>
-            <p>{{question_sanitized}}</p>
-            <p><b><em>ANSWER:</em></b> {{answer_sanitized}}</p>
+            <p>{{{question}}}</p>
+            <p><b><em>ANSWER:</em></b> {{{answer}}}</p>
         </div>
-        {{/EasySearch.Each}}
     </div>
+    <hr>
+    {{/EasySearch.Each}}
 </template>
 
 <template name="potentialUser">
